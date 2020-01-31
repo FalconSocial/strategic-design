@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <title>Falcon.io Workshop: Angular Libraries and Monorepo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css"
+        integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+    <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet"
+        type="text/css">
+    <style>
+        .task-list-item {
+            list-style-type: none;
+        }
+
+        .task-list-item-checkbox {
+            margin-left: -20px;
+            vertical-align: middle;
+        }
+    </style>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+</head>
+
+<body>
+    <h1 id="advanced-angular-workshop-libraries-and-monorepo">Falcon.io Workshop: Angular Libraries and Monorepo</h1>
+    <ul>
+        <li><a href="#advanced-angular-workshop-libraries-and-monorepo">Falcon.io Workshop: Angular Libraries and
+                Monorepo</a>
+            <ul>
+                <li><a href="#using-the-project-monorepo">Using the Project Monorepo</a></li>
+                <li><a href="#use-a-library">Use a library</a></li>
+                <li><a href="#bonus-provide-a-config-object-for-your-library">Bonus: Provide a Config Object for your
+                        Library</a></li>
+                <li><a href="#bonus-adapt-your-library">Bonus: Adapt your library *</a></li>
+                <li><a href="#bonus-export-your-library-to-a-local-npm-registry">Bonus: Export your library to a local
+                        npm registry **</a></li>
+                <li><a href="#bonus-writing-a-passenger-library">Bonus: Writing a Passenger Library ***</a>
+                    <ul>
+                        <li><a href="#creating-a-libray">Creating a Libray ***</a></li>
+                        <li><a href="#web-api">Web API ***</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <h2 id="using-the-project-monorepo">Using the Project Monorepo</h2>
+    <p>In this exercise, you will expand your application by one domain that "checks out" the products you want to
+        order.
+        You can orientate yourself by the existing <strong>Catalog</strong> domain.
+        The checkout domain will need to use some functionality from the catalog, for requesting a product
+        <strong>catalog/feature-request-product</strong>.
+        It will also need to use some shared UI to display the address, where they will be sent
+        <strong>shared/ui-adress</strong>
+    </p>
+    <p>You can follow these steps:</p>
+    <ol>
+        <li>
+            <p>Lets start by reviewing the folder structure from an existing domain (ex. Catalog).
+                Note that as Manfred's describes in his talk, each main-domain contains:
+                <ul>
+                    <li><strong>Api</strong>: which is the fachade/open api, other libs can use</li>
+                    <li><strong>Features</strong></li>
+                    <li><strong>Shell</strong></li>
+                    <li><strong>Domain</strong> specific logic: which consist of three folders:
+                        <ul>
+                            <li>
+                                <strong>Application</strong>: where you will have your state-management logic.
+                            </li>
+                            <li>
+                                <strong>Instafrastructure</strong>: which will contain data-access, api calls.
+                            </li>
+                            <li>
+                                <strong>Entities</strong> which contains your models.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </p>
+        </li>
+        <li>
+            <p>
+                In the future, we will be able to create those four libs per domain in one command using schematics.
+                But until then, lets create them separately.
+            </p>
+
+            <details>
+                <summary>Show command for api lib</summary>
+                <p>
+                    <pre>
+                        <code class="language-html">
+                            <div>ng generate @nrwl/angular:library --name=api --style=scss --directory=check-out</div>
+                    </code></pre>
+                </p>
+            </details>
+
+            <details>
+                <summary>Show command for feature lib</summary>
+                <p>
+                    <pre>
+                        <code class="language-html">
+                            <div>ng generate @nrwl/angular:library --name=feature-checkout-products --style=scss --directory=check-out --lazy --routing</div>
+                    </code></pre>
+                </p>
+            </details>
+            <p>
+                (generate libs also for: <i>shell</i> and <i>domain</i> without lazy loading or routing)
+            </p>
+            <p>
+                Create three folders in the domain lib for application, infrastruture and entities
+            </p>
+        </li>
+        <li>
+            <p>
+                We will use the shared ui adress lib for our use case, so we need to import it in our domain module.
+            </p>
+            <p>- <code> Import SharedUiAddressModule in your check-out-domain.module and run nx dep-graph </code> </p>
+            <p>You should see a dependency graph, where check-out-domain now uses the shared-ui-address library</p>
+        </li>
+        <li>
+            <p>
+                Now lets build our feature. For that we will create a component and use the domain module so we have the
+                domain logic for our feature.
+            </p>
+            <details>
+                <summary>Show command</summary>
+                <p>
+                    <pre>
+                        <code class="language-html">
+                            <div>ng generate @schematics/angular:component --name=feature-component --project=check-out-feature-checkout-products --module=check-out-feature-checkout-products --style=scss --changeDetection=OnPush</div>
+                    </code></pre>
+                </p>
+            </details>
+            <p>- <code>Import the domain module in your feature module, so you could use it</code></p>
+                
+            <p>After that restart your dep-graph. You should see your feature depending on the domain</p>
+        </li>
+        <li>
+            <p>After you have implemented your feature with a route associated to it. You can use it in your app.</p>
+            <p>- 
+                <code>
+                    Import your feature module and check the dependency graph again.
+                </code>
+            </p>
+        </li>
+        <li>
+            Last step in the scenario will be the need of one domain to use logic from another domain.
+            For that we have to set what modules we want to make public so other domain libs could use them.
+            In this scenario, we will make domain module public to other domains.
+            To do that:
+            <p>- 
+                <code>Import Domain module in api module</code>
+            </p> and
+            <p>- 
+                <code> Use that api module in another feature domain                    
+                </code>
+            </p>
+        </li>
+</body>
+
+</html>
