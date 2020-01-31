@@ -39,7 +39,7 @@
         <li><a href="#advanced-angular-workshop-libraries-and-monorepo">Falcon.io Workshop: Angular Libraries and
                 Monorepo</a>
             <ul>
-                <li><a href="#using-the-project-monorepo">Using the Project Monorepo</a></li>
+                <li><a href="#using-the-project-monorepo">Create a domain in a Project Monorepo</a></li>
                 <li><a href="#use-a-library">Use a library</a></li>
                 <li><a href="#bonus-provide-a-config-object-for-your-library">Bonus: Provide a Config Object for your
                         Library</a></li>
@@ -55,19 +55,24 @@
             </ul>
         </li>
     </ul>
-    <h2 id="using-the-project-monorepo">Using the Project Monorepo</h2>
-    <p>In this exercise, you will expand your application by one domain that "checks out" the products you want to
-        order.
-        You can orientate yourself by the existing <strong>Catalog</strong> domain.
-        The checkout domain will need to use some functionality from the catalog, for requesting a product: 
+    <h2 id="using-the-project-monorepo">Create a domain in Project Monorepo</h2>
+    <p>In this exercise, you will get familiar with basic commands and dependency visualization in a poject monorepo.
+    </p>
+    <p>
+        Let's expand the application by one domain that "checks out" the products you want to
+        order. You can orientate yourself by the existing <strong>Catalog</strong> domain/lib.
+    </p>
+    <p>
+        
+        The "check-out" domain will need to use some functionality from the catalog, for requesting a product: 
         <strong>catalog/feature-request-product</strong>.
-        It will also need to use some shared UI to display the address, where they will be sent: 
+        It will also need to use some shared UI to display the address, where the product will be sent: 
         <strong>shared/ui-adress</strong>
     </p>
     <p>You can follow these steps:</p>
     <ol>
         <li>
-            <p>Lets start by reviewing the folder structure from an existing domain (ex. Catalog).
+            <p>Let's start by reviewing the folder structure from an existing domain (ex. Catalog).
                 Note that as Manfred's describes in his talk, each main-domain contains:
                 <ul>
                     <li><strong>Api</strong>: which is the fachade/open api. Functionality other libs can use</li>
@@ -92,7 +97,7 @@
         <li>
             <p>
                 In the future, we will be able to create those four libs per domain in one command using schematics.
-                But until then, lets create them separately.
+                But until then, let's create them separate.
             </p>
 
             <details>
@@ -130,7 +135,7 @@
         </li>
         <li>
             <p>
-                Now lets build our feature. For that we will create a component and use the domain module so we have the
+                Now let's build our feature. For that we will create a component and use the domain module so we have the
                 domain logic for our feature.
             </p>
             <details>
@@ -167,6 +172,67 @@
                 </code>
             </p>
         </li>
+
+        <h2 id="create-schematics">Create custom schematics</h2>
+        <p>
+            Schematics are a good way to enforce standards and genrate custom code specific to your organization.
+        </p>
+        <p>
+            In this section, we will learn how easy is to create custom schematics for your app. We will create an schematic to create a domain,
+            following the structure we have learnt in the previous section.
+        </p>
+
+        <ol>
+            <li>
+                <p> Generate the custom schematic </p>
+                <details>
+                    <summary>Show command</summary>
+                    <p>
+                        <pre>
+                            <code class="language-html">
+                                <div>ng generate workspace-schematic falcon-domain</div>
+                            </code>
+                        </pre>
+                    </p>
+                </details>
+
+                <p>
+                    The <strong>workspace-schematic</strong> creates a falcon-domain folder inside of <strong>tools/schematics</strong> with two files:
+                     <strong>schema.json</strong> and <strong>index.ts</strong>
+                </p>
+            </li>
+            <li>
+                <p>Update the Schema</p>
+
+                <p>
+                    Let's open the schema.json. It contains metadata for our custom schematic.
+                </p>
+
+                <p>
+                    You can add as many properties to this file as you want, one example could be the name of the project, etc. In our case it is enough with one property <strong> name </strong> for our domain name.
+                    Notice at the end of the file how the name property is a required field.
+                </p>
+
+                <p>
+                    After setting our properties, we can implement our custom schematic in <strong>index.ts</strong>
+                </p>
+
+                <p>
+                    Lets go trough the generated code by nx and understand what is imported by angular-devkit/schematics:
+                    <p>
+                        - <strong>Rule</strong>: pieces of the schematics that tell the CLI how to modify the file system.
+                    </p>
+                    <p>
+                        - <strong>Chain</strong>: we can combine rules using it. There are more functions on the official CLI schematic code.
+                    </p>
+                    <p>
+                        - <strong>ExternalSchematic</strong>: function that refers to an external schematic for our rule. Takes in an schema and returns a rule.
+                    </p>
+                </p>
+                
+            </li>
+        </ol>
+
 </body>
 
 </html>
