@@ -59,9 +59,9 @@
     <p>In this exercise, you will expand your application by one domain that "checks out" the products you want to
         order.
         You can orientate yourself by the existing <strong>Catalog</strong> domain.
-        The checkout domain will need to use some functionality from the catalog, for requesting a product
+        The checkout domain will need to use some functionality from the catalog, for requesting a product: 
         <strong>catalog/feature-request-product</strong>.
-        It will also need to use some shared UI to display the address, where they will be sent
+        It will also need to use some shared UI to display the address, where they will be sent: 
         <strong>shared/ui-adress</strong>
     </p>
     <p>You can follow these steps:</p>
@@ -70,19 +70,19 @@
             <p>Lets start by reviewing the folder structure from an existing domain (ex. Catalog).
                 Note that as Manfred's describes in his talk, each main-domain contains:
                 <ul>
-                    <li><strong>Api</strong>: which is the fachade/open api, other libs can use</li>
+                    <li><strong>Api</strong>: which is the fachade/open api. Functionality other libs can use</li>
                     <li><strong>Features</strong></li>
                     <li><strong>Shell</strong></li>
                     <li><strong>Domain</strong> specific logic: which consist of three folders:
                         <ul>
                             <li>
-                                <strong>Application</strong>: where you will have your state-management logic.
+                                <strong>Application</strong>: will have your state-management logic.
                             </li>
                             <li>
-                                <strong>Instafrastructure</strong>: which will contain data-access, api calls.
+                                <strong>Instafrastructure</strong>: will contain data-access, api calls, etc.
                             </li>
                             <li>
-                                <strong>Entities</strong> which contains your models.
+                                <strong>Entities</strong> will contain your models.
                             </li>
                         </ul>
                     </li>
@@ -126,7 +126,7 @@
                 We will use the shared ui adress lib for our use case, so we need to import it in our domain module.
             </p>
             <p>- <code> Import SharedUiAddressModule in your check-out-domain.module and run nx dep-graph </code> </p>
-            <p>You should see a dependency graph, where check-out-domain now uses the shared-ui-address library</p>
+            <p>You should see a dependency graph, where check-out domain now uses the shared-ui-address library</p>
         </li>
         <li>
             <p>
@@ -156,8 +156,8 @@
         </li>
         <li>
             Last step in the scenario will be the need of one domain to use logic from another domain.
-            For that we have to set what modules we want to make public so other domain libs could use them.
-            In this scenario, we will make domain module public to other domains.
+            For that, we have to set what modules we want to make public so other domain libs could use them.
+            In this case, we will make domain module public to other domains.
             To do that:
             <p>- 
                 <code>Import Domain module in api module</code>
