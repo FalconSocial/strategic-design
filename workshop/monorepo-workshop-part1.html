@@ -42,7 +42,7 @@
         <li><a href="#using-the-project-monorepo">Create a domain in a Project Monorepo</a></li>
         <li><a href="#familiar-command">Getting familiar with Nx commands + Angular console</a></li>
         <li><a href="#familiar-tags">Getting familiar with Nx tags and access restriction</a></li>
-        <!-- <li><a href="#create-schematics">Bonus: Create a custom schematics</a></li> -->
+        <li><a href="#create-schematics">Bonus: Create a custom schematics</a></li>
       </ul>
     </li>
   </ul>
@@ -257,18 +257,21 @@
 
     <p>You should see a linting error saying: <strong>"A project tagged with "domain:ordering" can only depeng on libs tagged with "domain:ordering"</strong></p>
 
-    <h2 id="create-schematics">Create custom schematics: (Work in progress..)</h2>
+    <h2 id="create-schematics">Bonus: Create custom schematics: (Work in progress..)</h2>
     <p>Schematics are a good way to enforce standards and generate custom code specific to your organization.</p>
 
-    The goal of this section was to create an schematic to easily create domain with the structure Manfred proposed.
+    The goal of this section is to generate an schematic to easily create a domain with the structure Manfred proposes.
 
     It is <strong>work in progress...</strong> 
 
-    <p>Til then... these are some interesting resources for you to read.</p>
+    <p>Til then... these are some interesting resources for you to read:</p>
 
-    <a href="https://www.softwarearchitekt.at/aktuelles/automating-your-angular-architecture-with-workspace-schematics-part-1-rules-and-parameters/" target="_blank">Automating your angular architecture with workspace schematics</a>
-    <a href="https://auth0.com/blog/create-custom-schematics-with-nx/" target="_blank">Create custom schematics with nx</a>
-
+    <p>
+      <a href="https://www.softwarearchitekt.at/aktuelles/automating-your-angular-architecture-with-workspace-schematics-part-1-rules-and-parameters/" target="_blank">Automating your angular architecture with workspace schematics</a>
+    </p>
+    <p>
+      <a href="https://auth0.com/blog/create-custom-schematics-with-nx/" target="_blank">Create custom schematics with nx</a>
+    </p>
 
     <p>
       Feel free to go trough those tutorials and try them out yourself
@@ -349,66 +352,7 @@
           </p>
         </p>
       </li>
-    </ol>
-  
-  
-  
-  
-import { chain, externalSchematic, Rule } from '@angular-devkit/schematics';
-import * as path from 'path';
-
-const createFolder = (domain, name) {
-  
-}
-
-export default function(schema: any): Rule {
-  if (!schema.name.startsWith('auth-')) {
-    throw new Error(`Auth modules must be prefixed with 'auth-'`);
-  }
-
-  return chain([
-    externalSchematic('@schematics/angular', 'module', {
-      project: schema.project,
-      name: schema.name,
-      routing: true,
-      module: 'app.module.ts'
-    }),
-    externalSchematic('@schematics/angular', 'service', {
-      project: schema.project,
-      name: schema.name,
-      path: path.join(
-        'apps',
-        schema.project,
-        'src',
-        'app',
-        schema.name,
-        'services'
-      )
-    }),
-    externalSchematic('@schematics/angular', 'guard', {
-      project: schema.project,
-      name: schema.name,
-      path: path.join(
-        'apps',
-        schema.project,
-        'src',
-        'app',
-        schema.name,
-        'services'
-      )
-    })
-  ]);
-}
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  -->
+    </ol> -->
 </body>
 </html>
 
