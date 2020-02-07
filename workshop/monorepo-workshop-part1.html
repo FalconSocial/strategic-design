@@ -222,19 +222,22 @@
 
     <h4>Angular console</h4>
 
-    VsCode extension to make it easier for developers to run Angular CLI commands. 
-    
+    VsCode extension to make it easier for developers to run Angular CLI commands.
+
     <p>Install it and spend some time playing with it.</p>
 
     <h2 id="familiar-tags">Getting familiar with Nx tags and access restrictions</h2>
-    Nx allows us to enforce the mentioned access rules between libraries. For this, we have to assign tags to each library within nx.json.
+    Nx allows us to enforce the mentioned access rules between libraries. For this, we have to assign tags to each
+    library within nx.json.
 
-    <p>Check the tags that have been added to your libs in nx.json. Feel free to create a new tag for your newly created libs.</p>
+    <p>Check the tags that have been added to your libs in nx.json. Feel free to create a new tag for your newly created
+      libs.</p>
 
-    <p>Then, within tslint.json we can use the rule nx-enforce-module-boundaries to define restrictions. So we can define which libraries or apps can acess other libs</p>
+    <p>Then, within tslint.json we can use the rule nx-enforce-module-boundaries to define restrictions. So we can
+      define which libraries or apps can acess other libs</p>
 
     <p>
-      For example: 
+      For example:
       <pre>
           <code class="language-json">
             { 
@@ -247,112 +250,81 @@
 
     <p>Which means you can only use domain:ordering libs with libraries that contains one of the three tags</p>
 
-    <p>You can try what happens when you go to a module for example: <strong>ordering-feature-send-order.module.ts</strong> and:</p>
-      <pre>
+    <p>You can try what happens when you go to a module for example:
+      <strong>ordering-feature-send-order.module.ts</strong> and:</p>
+    <pre>
         <code class="language-js">
           import { CatalogueDomainModule } from '@e-proc/catalog/domain'
         </code>
     </pre>
-    
 
-    <p>You should see a linting error saying: <strong>"A project tagged with "domain:ordering" can only depeng on libs tagged with "domain:ordering"</strong></p>
+    <p>You should see a linting error saying: <strong>"A project tagged with "domain:ordering" can only depeng on libs
+        tagged with "domain:ordering"</strong></p>
 
-    <h2 id="create-schematics">Bonus: Create custom schematics: (Work in progress..)</h2>
+    <h2 id="create-schematics">Bonus: Create custom schematics</h2>
     <p>Schematics are a good way to enforce standards and generate custom code specific to your organization.</p>
 
     The goal of this section is to generate an schematic to easily create a domain with the structure Manfred proposes.
 
-    It is <strong>work in progress...</strong> 
-
-    <p>Til then... these are some interesting resources for you to read:</p>
+    <p>Unfortunately, i couldnt write all the steps in this section but here there are some interesting resources for you to read:</p>
 
     <p>
-      <a href="https://www.softwarearchitekt.at/aktuelles/automating-your-angular-architecture-with-workspace-schematics-part-1-rules-and-parameters/" target="_blank">Automating your angular architecture with workspace schematics</a>
+      <a href="https://www.softwarearchitekt.at/aktuelles/automating-your-angular-architecture-with-workspace-schematics-part-1-rules-and-parameters/"
+        target="_blank">Automating your angular architecture with workspace schematics</a>
     </p>
     <p>
-      <a href="https://auth0.com/blog/create-custom-schematics-with-nx/" target="_blank">Create custom schematics with nx</a>
+      <a href="https://auth0.com/blog/create-custom-schematics-with-nx/" target="_blank">Create custom schematics with
+        nx</a>
     </p>
 
     <p>
       Feel free to go trough those tutorials and try them out yourself
     </p>
-    <!-- <p>
-    </p>
-    <p>
-      In this section, we will learn how easy is to create custom schematics for your app. We will create an schematic
-      to create a domain from an empty workspace,
-      following the structure we have learnt in the previous section.
-    </p>
 
     <p>
-      For the sake of this section, we will be creating a new workspace in a different folder, so we wont use this repo.
+      Here is an example of an schematic that will create a domain with Manfred's structure:
+      <details>
+        <summary>Show schematic</summary>
+        <p>
+          <pre>
+              <code class="language-js">
+
+                import { chain, externalSchematic, Rule, Tree } from '@angular-devkit/schematics';
+                import { normalize } from '@angular-devkit/core';
+                import * as path from 'path';
+
+                const createLib = (domainName, libName) => {
+                  console.log(domainName);
+                  return externalSchematic('@nrwl/workspace', 'lib', {
+                    name: libName,
+                    directory: domainName,
+                    path: path.join(
+                      'libs'
+                    )
+                  });
+                };
+
+                const createFolder = (domainName, folderName) => {
+                  return (tree: Tree) => 
+                    tree.create(normalize(`libs/${domainName}/domain/src/lib/${folderName}/.gitkeep`), '');
+                };
+
+                export default function(schema: any): Rule {
+                  return chain([
+                    createLib(schema.name, 'api'),
+                    createLib(schema.name, 'domain'),
+                    createLib(schema.name, 'shell'),
+                    createFolder(schema.name, 'application'),
+                    createFolder(schema.name, 'entities'),
+                    createFolder(schema.name, 'infrastructure')
+                  ]);
+                }
+
+          </code>
+        </pre>
+        </p>
+      </details>
     </p>
-    <ol>
-      <li>
-        <p>Start by creating a workspace</p>
-        <details>
-          <summary>Show command</summary>
-          <p>
-            <pre>
-                <code class="language-html">
-                    <div>npx create-nx-workspace@latest falcon-client</div>
-                </code>
-            </pre>
-          </p>
-        </details>
-      </li>
-      <li>
-        <p> Generate the custom schematic </p>
-        <details>
-          <summary>Show command</summary>
-          <p>
-            <pre>
-                <code class="language-html">
-                    <div>ng generate workspace-schematic falcon-domain</div>
-                </code>
-            </pre>
-          </p>
-        </details>
-
-        <p>
-          The <strong>workspace-schematic</strong> creates a falcon-domain folder inside of
-          <strong>tools/schematics</strong> with two files:
-          <strong>schema.json</strong> and <strong>index.ts</strong>
-        </p>
-      </li>
-      <li>
-        <p>Update the Schema</p>
-
-        <p>
-          Let's open the schema.json. It contains metadata for our custom schematic.
-        </p>
-
-        <p>
-          You can add as many properties to this file as you want, one example could be the name of the project, etc. In
-          our case it is enough with one property <strong> name </strong> for our domain name.
-          Notice at the end of the file how the name property is a required field.
-        </p>
-
-        <p>
-          After setting our properties, we can implement our custom schematic in <strong>index.ts</strong>
-        </p>
-
-        <p>
-          Lets go trough the generated code by nx and understand what is imported by angular-devkit/schematics:
-          <p>
-            - <strong>Rule</strong>: pieces of the schematics that tell the CLI how to modify the file system.
-          </p>
-          <p>
-            - <strong>Chain</strong>: we can combine rules using it. There are more functions on the official CLI
-            schematic code.
-          </p>
-          <p>
-            - <strong>ExternalSchematic</strong>: function that refers to an external schematic for our rule. Takes in
-            an schema and returns a rule.
-          </p>
-        </p>
-      </li>
-    </ol> -->
 </body>
-</html>
 
+</html>
