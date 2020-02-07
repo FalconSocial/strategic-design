@@ -87,15 +87,17 @@
     <li>
       <p>
         In the future, we will be able to create those four libs per domain in one command using schematics.
-        But until then, let's create them separate.
+        But until then, let's create them separate:
+        <br><br> ( Make sure to add nrwl/angular to your workspace by running, nx add @nrwl/angular)
       </p>
 
       <details>
         <summary>Show command for api lib</summary>
         <pre>
-                        <code class="language-html">
-                            <div>ng generate @nrwl/angular:library --name=api --style=scss --directory=check-out</div>
-                    </code></pre>
+          <code class="language-html">
+            <div>ng generate @nrwl/angular:library --name=api --style=scss --directory=check-out</div>
+          </code>
+        </pre>
       </details>
 
       <details>
@@ -128,14 +130,15 @@
         <summary>Show command</summary>
         <p>
           <pre>
-                        <code class="language-html">
-                            <div>ng generate @schematics/angular:component --name=feature-component --project=check-out-feature-checkout-products --module=check-out-feature-checkout-products --style=scss --changeDetection=OnPush</div>
-                    </code></pre>
+            <code class="language-html">
+              <div>ng generate @schematics/angular:component --name=feature-component --project=check-out-feature-checkout-products --module=check-out-feature-checkout-products --style=scss --changeDetection=OnPush</div>
+            </code>
+          </pre>
         </p>
       </details>
       <p>- <code>Import the domain module in your feature module, so you could use it</code></p>
 
-      <p>After that restart your dep-graph. You should see your feature depending on the domain</p>
+      <p>Then, restart your dep-graph. You should see your feature depending on the domain</p>
     </li>
     <li>
       <p>After you have implemented your feature with a route associated to it. You can use it in your app.</p>
@@ -166,8 +169,7 @@
 
     <p>
       In this section, we will dive deeper on the possible commands and options nx has. Then we will install Angular
-      console which will help
-      us execute those commands in a more intuitive way.
+      console which will help us execute those commands in a more intuitive way.
     </p>
 
     <p>
@@ -252,11 +254,12 @@
 
     <p>You can try what happens when you go to a module for example:
       <strong>ordering-feature-send-order.module.ts</strong> and:</p>
-    <pre>
-        <code class="language-js">
-          import { CatalogueDomainModule } from '@e-proc/catalog/domain'
-        </code>
-    </pre>
+
+     <p>
+       <strong>
+        import { CatalogueDomainModule } from '@e-proc/catalog/domain'
+       </strong>
+     </p> 
 
     <p>You should see a linting error saying: <strong>"A project tagged with "domain:ordering" can only depeng on libs
         tagged with "domain:ordering"</strong></p>
@@ -266,7 +269,7 @@
 
     The goal of this section is to generate an schematic to easily create a domain with the structure Manfred proposes.
 
-    <p>Unfortunately, i couldnt write all the steps in this section but here there are some interesting resources for you to read:</p>
+    <p>Unfortunately, I couldnt write all the steps in this section but here there are some interesting resources for you to read:</p>
 
     <p>
       <a href="https://www.softwarearchitekt.at/aktuelles/automating-your-angular-architecture-with-workspace-schematics-part-1-rules-and-parameters/"
